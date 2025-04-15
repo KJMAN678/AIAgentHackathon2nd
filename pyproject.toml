@@ -1,0 +1,16 @@
+[project]
+name = "AI-AIAgentHackathon2nd"
+version = "0.1.0"
+description = "AI Agent Hackathon 向け LLM+ゲームを開発"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pygame==2.6.1",
+]
+
+[tool.uv]
+link-mode = "copy"
+dev-dependencies = [
+    "ruff==0.11.5",
+    "pytest==8.3.5",
+]
