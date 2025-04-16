@@ -1,8 +1,10 @@
 # Example file showing a basic pygame "game loop"
+import asyncio
 import pygame
+import sys
 
 
-def main():
+async def main():
     # pygame setup
     pygame.init()
     screen = pygame.display.set_mode((1280, 720))
@@ -25,9 +27,11 @@ def main():
         pygame.display.flip()
 
         clock.tick(60)  # limits FPS to 60
+        await asyncio.sleep(0)
 
     pygame.quit()
+    sys.exit()
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
