@@ -177,3 +177,4 @@ cython_debug/
 .DS_Store
 
 trush/
+db.sqlite3

@@ -4,17 +4,14 @@ $ uv venv .venv
 $ source .venv/bin/activate
 $ uv pip install -U pip
 $ uv pip install -r requirements.txt
+$ django-admin startproject config .
 
-$ python main.py
-# ブラウザで起動
-$ python -m pygbag --ume_block=0 .
-$ python -m pygbag --ume_block=0 --git --template noctx.tmpl .
+# ローカルサーバー立ち上げ
+$ gunicorn --bind 0.0.0.0:8000 config.wsgi:application
 
-- 暫く待つとゲーム画面が立ち上がる
-http://localhost:8000/
-
-# PyGame のサンプルゲーム起動
-$ uv run python -m pygame.examples.aliens
+$ python manage.py migrate
+$ python manage.py makemigrations
+$ python manage.py createsuperuser --noinput
 ```
 
 ```sh
