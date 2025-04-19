@@ -19,4 +19,6 @@ __pycache__/
 /setup.cfg
 
 .venv/
-# staticfiles/
+.mypy_cache/
+.ruff_cache/
+db.sqlite3

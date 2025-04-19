@@ -176,6 +176,5 @@ cython_debug/
 # Mac ファイル
 .DS_Store
 
-trush/
 db.sqlite3
 staticfiles/
