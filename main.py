@@ -1,37 +1,16 @@
-# Example file showing a basic pygame "game loop"
-import asyncio
-import pygame
-import sys
+import os
+
+from flask import Flask
+
+app = Flask(__name__)
 
 
-async def main():
-    # pygame setup
-    pygame.init()
-    screen = pygame.display.set_mode((1280, 720))
-    clock = pygame.time.Clock()
-    running = True
-
-    while running:
-        # poll for events
-        # pygame.QUIT event means the user clicked X to close your window
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        # fill the screen with a color to wipe away anything from last frame
-        screen.fill("purple")
-
-        # RENDER YOUR GAME HERE
-
-        # flip() the display to put your work on screen
-        pygame.display.flip()
-
-        clock.tick(60)  # limits FPS to 60
-        await asyncio.sleep(0)
-
-    pygame.quit()
-    sys.exit()
+@app.route("/")
+def hello_world():
+    """Example Hello World route."""
+    name = os.environ.get("NAME", "World")
+    return f"Hello {name}!"
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
