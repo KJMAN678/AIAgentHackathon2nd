@@ -15,7 +15,8 @@ http://0.0.0.0:8080/admin/
 $ python manage.py migrate
 $ python manage.py makemigrations
 $ python manage.py createsuperuser --noinput
-$ python manage.py collectstatic
+$ rm -rf staticfiles/
+$ python manage.py collectstatic --clear
 
 $ mkdir game
 $ django-admin startapp game game

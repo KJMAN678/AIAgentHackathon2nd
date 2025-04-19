@@ -29,4 +29,6 @@ window.onload = () => {
       p.innerText = numbers[i];
       elm.appendChild(p);
     }
+
+    console.log(1);
   }
