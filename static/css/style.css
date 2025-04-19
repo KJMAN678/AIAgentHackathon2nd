@@ -1,0 +1,22 @@
+#screen {
+    margin :32px auto;
+    width: 780px;
+    height: 580px;
+    border: solid 1px #888;
+    background-color: #f0f0f0;
+    user-select: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+  }
+  .card {
+    width: 180px;
+    height: 180px;
+    background-color: white;
+  }
+  .card p {
+    margin: 0;
+    font-size: 120px;
+    line-height: 180px;
+    text-align: center;
+  }

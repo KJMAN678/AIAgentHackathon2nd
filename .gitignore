@@ -178,3 +178,4 @@ cython_debug/
 
 trush/
 db.sqlite3
+staticfiles/
