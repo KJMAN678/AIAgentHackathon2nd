@@ -68,3 +68,5 @@ $ ruff format .
 - [GCP 公式ドキュメント 公開（未認証）アクセスを許可する --allow-unauthenticated](https://cloud.google.com/run/docs/authenticating/public?hl=ja)
 - [GCP 公式ドキュメント DjangoアプリをCloudRunにデプロイ](https://cloud.google.com/python/django/run)
   - [サンプルコード](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/django)
+- JavaScript によるゲームの実装
+  - [番号タッチゲームを作るよ](https://javascript-game.com/number-touch-game/)
