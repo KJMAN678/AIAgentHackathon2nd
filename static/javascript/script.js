@@ -30,5 +30,5 @@ window.onload = () => {
       elm.appendChild(p);
     }
 
-    console.log(1);
+    console.log(2);
   }

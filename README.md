@@ -16,7 +16,7 @@ $ python manage.py migrate
 $ python manage.py makemigrations
 $ python manage.py createsuperuser --noinput
 $ rm -rf staticfiles/
-$ python manage.py collectstatic --clear
+$ python manage.py collectstatic --no-input
 
 $ mkdir game
 $ django-admin startapp game game
