@@ -2,11 +2,19 @@
 
 {% load static %}
 <html>
-<script src="{% static 'javascript/script.js' %}"></script>
-<link type='text/css' rel="stylesheet" href="{% static 'css/style.css' %}">
+<head>
+  <title>ゲーム</title>
+  <link type='text/css' rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- 先にDjangoデータをJSONとして渡す -->
+  {{ game_data|json_script:"gameData" }}
+</head>
 <body>
   <h1>ゲーム</h1>
+  レベル: {{ game_data.level }}
   <div id="screen">
   </div>
+  
+  <!-- JavaScriptは最後に読み込む -->
+  <script src="{% static 'javascript/script.js' %}"></script>
 </body>
 </html>

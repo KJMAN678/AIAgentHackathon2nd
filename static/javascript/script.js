@@ -1,4 +1,15 @@
 window.onload = () => {
+
+    // Djangoから渡されたデータを取得
+    const gameDataElement = document.getElementById("gameData");
+    let gameData = {};
+    
+    // データが存在する場合は解析する
+    if (gameDataElement) {
+        gameData = JSON.parse(gameDataElement.textContent);
+        console.log("Djangoから取得したデータ:", gameData.level * 10);
+    }
+
     const max = 12;
     const numbers = [];
     let count = 0;
@@ -30,5 +41,8 @@ window.onload = () => {
       elm.appendChild(p);
     }
 
-    console.log(2);
+    document.addEventListener('DOMContentLoaded', function() {
+      // GAME_DATAはすでにHTMLで定義されているため、ここで使用可能
+      console.log('ゲームレベル:', GAME_DATA.level);
+    });
   }
