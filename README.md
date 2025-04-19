@@ -54,7 +54,7 @@ $ gcloud projects add-iam-policy-binding $PROJECT_ID \
   
 # CloudRun にデプロイ
 # Port は 8080 にする必要あり
-$ gcloud run deploy --source . cloud-run-source-deploy --region asia-northeast2 --allow-unauthenticated
+$ gcloud run deploy --source . gen-ai-game --region asia-northeast2 --allow-unauthenticated
 ```
 
 ### ruff によるコード整形
