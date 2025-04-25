@@ -36,6 +36,7 @@ $ django-admin startapp game game
 # 環境変数の設定.
 $ export PROJECT_ID=HOGE_PROJECT_ID
 $ export PROJECT_NUMBER=HOGE_PROJECT_NUMBER
+$ export GCP_EMAIL=HOGE_GCP_EMAIL
 
 # GC CLI でログイン 
 $ gcloud auth login
@@ -43,9 +44,10 @@ $ gcloud auth login
 # プロジェクトIDの設定
 $ gcloud config set project $PROJECT_ID
 
-# Cloud Run Admin API と Cloud Build API を有効にする
+# Cloud Run Admin API と Cloud Build API, ArtifactRegistry API を有効にする
 $ gcloud services enable run.googleapis.com \
-    cloudbuild.googleapis.com
+    cloudbuild.googleapis.com \
+    artifactregistry.googleapis.com
 
 # Cloud Build サービス アカウントに次の IAM ロールを付与
 $ gcloud projects add-iam-policy-binding $PROJECT_ID \
@@ -63,6 +65,37 @@ $ docker build -t django-app --no-cache .
 $ docker run -p 8080:8080 django-app
 ```
 
+### CloudRun + Dockerfile デプロイ 検証
+```sh
+- Artifact-Repository にリポジトリ作成する
+export REPOSITORY-IMAGE-NAME=asia-northeast1-docker.pkg.dev/green-campaign-457913-e2/ai-agent-hackathon/ai-game
+export REPOSITORY-NAME=asia-northeast1-docker.pkg.dev
+
+$ gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="user:${GCP_EMAIL}" \
+  --role=roles/artifactregistry.writer
+
+- リポジトリにロールを付与
+$ gcloud artifacts repositories add-iam-policy-binding ai-agent-hackathon \
+   --location=asia-northeast1 \
+   --member="user:${GCP_EMAIL}" \
+   --role=roles/artifactregistry.writer
+
+- Docker の認証
+$ gcloud auth configure-docker asia-northeast1-docker.pkg.dev
+
+# イメージをビルド
+# Artifact Registry では REPOSITORY という階層が増え、asia-docker.pkg.dev/${REGISTRY_IMAGE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME} とする必要あり
+# https://qiita.com/yan_yan/items/1f157f4bae5a6b32cdf0#%E8%A9%B0%E3%81%BE%E3%81%A3%E3%81%9F%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88%EF%BC%91
+$ docker build . --tag asia-northeast1-docker.pkg.dev/green-campaign-457913-e2/ai-agent-hackathon/ai-game --platform linux/amd64
+
+# イメージをプッシュ
+$ docker push asia-northeast1-docker.pkg.dev/green-campaign-457913-e2/ai-agent-hackathon/ai-game
+
+# デプロイ
+$ gcloud run deploy gen-ai-game --image asia-northeast1-docker.pkg.dev/green-campaign-457913-e2/ai-agent-hackathon/ai-game --region asia-northeast2 --allow-unauthenticated
+```
+
 ### ruff によるコード整形
 ```sh
 $ ruff check . --fix
@@ -77,3 +110,11 @@ $ ruff format .
   - [サンプルコード](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/django)
 - JavaScript によるゲームの実装
   - [番号タッチゲームを作るよ](https://javascript-game.com/number-touch-game/)
+
+- [ソースをコンテナにビルドする](https://cloud.google.com/run/docs/building/containers?hl=ja#docker)
+- [Docker + Cloud Run へのコンテナ イメージのデプロイ](https://cloud.google.com/run/docs/deploying?hl=ja#service)
+- [Artifact Registry ロールの付与](https://cloud.google.com/artifact-registry/docs/access-control?hl=ja#grant-project)
+- [事前定義された Artifact Registry ロール](https://cloud.google.com/artifact-registry/docs/access-control?hl=ja#roles)
+- [Artifact RegistryのイメージをGKEにデプロイする際に詰まった話](https://qiita.com/yan_yan/items/1f157f4bae5a6b32cdf0)
+  - Artifact Registry では REPOSITORY という階層が増え、asia-docker.pkg.dev/${REGISTRY_IMAGE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME} とする必要あり
+- 
