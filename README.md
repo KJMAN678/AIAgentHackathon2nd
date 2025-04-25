@@ -66,6 +66,7 @@ $ ruff format .
 ### 参考サイト
 - [GCP 公式ドキュメント Flask アプリをCloudRunにデプロイ](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-python-service?hl=ja)
 - [GCP 公式ドキュメント 公開（未認証）アクセスを許可する --allow-unauthenticated](https://cloud.google.com/run/docs/authenticating/public?hl=ja)
+- [GCP 公式ドキュメント Vertex AI の生成 AI のロケーション](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations?hl=ja)
 - [GCP 公式ドキュメント DjangoアプリをCloudRunにデプロイ](https://cloud.google.com/python/django/run)
   - [サンプルコード](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/django)
 - JavaScript によるゲームの実装
