@@ -57,6 +57,12 @@ $ gcloud projects add-iam-policy-binding $PROJECT_ID \
 $ gcloud run deploy --source . gen-ai-game --region asia-northeast2 --allow-unauthenticated
 ```
 
+### Docker 導入検証
+```sh
+$ docker build -t django-app --no-cache .
+$ docker run -p 8080:8080 django-app
+```
+
 ### ruff によるコード整形
 ```sh
 $ ruff check . --fix
