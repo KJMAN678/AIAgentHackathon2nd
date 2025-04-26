@@ -1,0 +1,20 @@
+services:
+
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app/frontend
+    ports:
+      - "3000:3000"
+    command: npm run start
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/app/backend
+    ports:
+      - "8080:8080"
