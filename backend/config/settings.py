@@ -16,6 +16,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "0.0.0.0",
     "localhost",
+    "127.0.0.1",
+    "backend",
     ".asia-northeast1.run.app",  # 東京リージョン
 ]
 
@@ -29,7 +31,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "game",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -40,6 +42,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -108,14 +111,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_DIR = Path.joinpath(BASE_DIR, "static")
-STATIC_ROOT = Path.joinpath(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-STATICFILES_DIRS = [
-    STATIC_DIR,
-]
+# frontend と backend の接続設定
+CORS_ORIGIN_WHITELIST = (
+    "http://localhost:3000",
+    "http://0.0.0.0:3000",
+    "http://127.0.0.1:3000",
+    "http://frontend:3000",
+)
+CORS_ALLOW_CREDENTIALS = True

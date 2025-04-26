@@ -10,25 +10,27 @@ $ docker build -t django-app --no-cache .
 $ docker run -p 8080:8080 django-app
 ```
 
-http://0.0.0.0:8080/
+http://0.0.0.0:8080/api/add?a=1&b=2
 http://0.0.0.0:8080/admin/
 
 ### Django コマンド(Dockerに導入未了)
 ```sh
 # スーパーユーザー作成
-$ python manage.py createsuperuser --noinput
+$ docker compose run --rm backend python manage.py createsuperuser --noinput
 $ rm -rf staticfiles/
-$ python manage.py collectstatic --no-input
+$ docker compose run --rm backend python manage.py collectstatic --no-input
 
 # 実行する必要ないが参考: Django のプロジェクト作成
-$ django-admin startproject config .
+$ docker compose run --rm backend django-admin startproject config .
+
+# docker compose run backend python manage.py migrate
 
 # 実行済みだが migration ファイルの作成
-$ python manage.py makemigrations
+$ docker compose run --rm backend python manage.py makemigrations
 
 # app 追加. settings.py の INSTALLED_APP にも追加をわすれないこと.
-$ mkdir game
-$ django-admin startapp game game
+$ mkdir backend/api
+$ docker compose run --rm backend django-admin startapp api backend/api
 ```
 
 ### GCP
@@ -99,8 +101,8 @@ $ gcloud run deploy gen-ai-game --image $REPOSITORY_IMAGE_NAME --region ${REGION
 
 ### ruff によるコード整形
 ```sh
-$ ruff check . --fix
-$ ruff format .
+$ docker compose run --rm backend ruff check . --fix
+$ docker compose run --rm backend ruff format .
 ```
 
 ### 参考サイト
@@ -119,3 +121,4 @@ $ ruff format .
 - [Artifact RegistryのイメージをGKEにデプロイする際に詰まった話](https://qiita.com/yan_yan/items/1f157f4bae5a6b32cdf0)
   - Artifact Registry では REPOSITORY という階層が増え、asia-docker.pkg.dev/${REGISTRY_IMAGE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME} とする必要あり
 - [gcloud アーティファクト リポジトリ 作成](https://cloud.google.com/sdk/gcloud/reference/artifacts/repositories/create)
+- [Django Ninja](https://django-ninja.dev/)

@@ -10,6 +10,8 @@ services:
     command: npm run start
     depends_on:
       - backend
+    networks:
+      - app-network
 
   backend:
     build:
@@ -18,3 +20,9 @@ services:
       - ./backend:/app/backend
     ports:
       - "8080:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

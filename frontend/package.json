@@ -4,14 +4,14 @@
   "description": "hackathon",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon --ext js,html server.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.1.4"
   },
-  "scripts": {
-    "start": "nodemon --ext js,html server.js"
+  "dependencies": {
+    "node-fetch": "^2.7.0"
   }
 }
