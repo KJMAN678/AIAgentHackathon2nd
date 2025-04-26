@@ -9,14 +9,14 @@ WORKDIR /app
 
 # Sync the project into a new environment, using the frozen lockfile
 COPY . /app
-RUN pip install -U pip
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Run migrations
 RUN python manage.py migrate
 
 # Expose port
-EXPOSE 8000
+EXPOSE 8080
 
 # Run the application
 CMD ["gunicorn", "--bind", "0.0.0.0:8080", "config.wsgi:application"]

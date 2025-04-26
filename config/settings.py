@@ -15,8 +15,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "0.0.0.0",
+    "localhost",
     ".asia-northeast1.run.app",  # 東京リージョン
-    ".asia-northeast2.run.app",  # 大阪リージョン
 ]
 
 
