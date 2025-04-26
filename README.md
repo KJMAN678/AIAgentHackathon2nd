@@ -12,19 +12,24 @@ $ export PROJECT_ID=HOGE_PROJECT_ID
 $ export PROJECT_NUMBER=HOGE_PROJECT_NUMBER
 $ export ZONE=asia-northeast1-a
 
+# GCE用のインスタンス名
+$ export INSTANCE_NAMES=ai-game-vm
+# GCE用のインスタンスのタグ名
+$ export TAG_NAME=webserver
+
 # GC CLI でログイン 
 $ gcloud auth login
 
 # プロジェクトIDの設定
 $ gcloud config set project $PROJECT_ID
 
-$ export INSTANCE_NAMES=ai-game-vm
-
 # Computer Engine の API を使えるようにする
 $ gcloud services enable compute.googleapis.com
 
+# GCE の自分のプロジェクトで使えるイメージの一覧を取得
 $ gcloud compute images list --project=$PROJECT_ID
 
+# GCE の特定のゾーン内で使える machine-types の一覧を表示
 $ gcloud compute machine-types list --zones=$ZONE
 
 # Computer Engine の インスタンス作成
@@ -33,11 +38,11 @@ $ gcloud compute instances create $INSTANCE_NAMES \
     --image-family=cos-121-lts \
     --image-project=cos-cloud
 
+# SSH接続用のファイアーウォール設定. 一度設定すれば二回目以降は不要
 $ gcloud compute firewall-rules create allow-ssh \
   --allow tcp:22
 
 # インスタンスにタグ名をつける
-$ export TAG_NAME=webserver
 $ gcloud compute instances add-tags $INSTANCE_NAMES --tags=${TAG_NAME}
 
 # 外部アクセスできるようにファイアーウォールを設定する
