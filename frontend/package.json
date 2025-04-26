@@ -1,0 +1,17 @@
+{
+  "name": "ai-game",
+  "version": "1.0.0",
+  "description": "hackathon",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --ext js,html server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}

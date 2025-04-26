@@ -107,8 +107,14 @@ onload = function () {
   ctx.font = "32px 'Times New Roman'";
   ship = new Ship();  // 自機オブジェクト作成
   back = document.getElementById("back");
+  const canvas = document.getElementById("field");
+  const rect = canvas.getBoundingClientRect();
+  
   window.onpointermove = (e) => {
-    ship.move(e.clientX, e.clientY);  // マウス移動⇒自機を移動
+    // キャンバス要素の位置を考慮した座標計算
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    ship.move(mouseX, mouseY);  // マウス移動⇒自機を移動
   };
   window.onpointerdown = (e) => {
     ship.shoot(); // マウス押下⇒弾丸発射

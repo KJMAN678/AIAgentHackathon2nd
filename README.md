@@ -1,54 +1,21 @@
-### Docker 導入検証
 ```sh
-# キャッシュ削除
-$ docker builder prune -f
+$ docker compose build --no-cache
+$ docker compose up -d
 
-# Docker コンテナ ビルド
-$ docker build -t django-app --no-cache .
-
-# Docker コンテナ立ち上げ
-$ docker run -p 8080:8080 django-app
+http://127.0.0.1:8080/api/hello
+http://127.0.0.1:3000
 ```
 
-http://0.0.0.0:8080/
-http://0.0.0.0:8080/admin/
-
-### Django コマンド(Dockerに導入未了)
-```sh
-# スーパーユーザー作成
-$ python manage.py createsuperuser --noinput
-$ rm -rf staticfiles/
-$ python manage.py collectstatic --no-input
-
-# 実行する必要ないが参考: Django のプロジェクト作成
-$ django-admin startproject config .
-
-# 実行済みだが migration ファイルの作成
-$ python manage.py makemigrations
-
-# app 追加. settings.py の INSTALLED_APP にも追加をわすれないこと.
-$ mkdir game
-$ django-admin startapp game game
-```
-
-### GCP
-- HOGE_PROJECT_ID、HOGE_PROJECT_NUMBER、HOGE_GCP_EMAIL は適宜更新
 ```sh
 # 環境変数の設定.
 $ export PROJECT_ID=HOGE_PROJECT_ID
 $ export PROJECT_NUMBER=HOGE_PROJECT_NUMBER
-$ export GCP_EMAIL=HOGE_GCP_EMAIL
-$ export LOCATION=asia
-$ export REGION=${LOCATION}-northeast1
-$ export FORMAT=docker
+$ export ZONE=asia-northeast1-a
 
-# 東京リージョン Artifact Repository 用の環境変数
-$ export DOMAIN_NAME=${REGION}-${FORMAT}.pkg.dev
-$ export REPOSITORY_NAME=ai-agent-hackathon
-$ export DOCKER_IMAGE_NAME=ai-game
-
-# Artifact Repository は asia-docker.pkg.dev/${REGISTRY_IMAGE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME} とする必要あり
-$ export REPOSITORY_IMAGE_NAME=${DOMAIN_NAME}/${PROJECT_ID}/${REPOSITORY_NAME}/${DOCKER_IMAGE_NAME}
+# GCE用のインスタンス名
+$ export INSTANCE_NAMES=ai-game-vm
+# GCE用のインスタンスのタグ名
+$ export TAG_NAME=webserver
 
 # GC CLI でログイン 
 $ gcloud auth login
@@ -56,66 +23,88 @@ $ gcloud auth login
 # プロジェクトIDの設定
 $ gcloud config set project $PROJECT_ID
 
-# Cloud Run Admin API と Cloud Build API, ArtifactRegistry API を有効にする
-$ gcloud services enable run.googleapis.com \
-    cloudbuild.googleapis.com \
-    artifactregistry.googleapis.com
+# Computer Engine の API を使えるようにする
+$ gcloud services enable compute.googleapis.com
 
-# Cloud Build サービス アカウントに次の IAM ロールを付与
-$ gcloud projects add-iam-policy-binding $PROJECT_ID \
-      --member=serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com \
-      --role=roles/run.builder
-  
-# Artifact-Repository にリポジトリ作成する
-$ gcloud artifacts repositories create ${REPOSITORY_NAME} --location=${REGION} --repository-format=docker
+# GCE の自分のプロジェクトで使えるイメージの一覧を取得
+$ gcloud compute images list --project=$PROJECT_ID
 
-# Docker の認証
-$ gcloud auth configure-docker $REPOSITORY_NAME
+# GCE の特定のゾーン内で使える machine-types の一覧を表示
+$ gcloud compute machine-types list --zones=$ZONE
 
-# ユーザーに Artifact Registry のロールを付与
-$ gcloud projects add-iam-policy-binding $PROJECT_ID \
-  --member="user:${GCP_EMAIL}" \
-  --role=roles/artifactregistry.writer
+# Computer Engine の インスタンス作成
+$ gcloud compute instances create $INSTANCE_NAMES \
+    --zone=${ZONE} \
+    --image-family=cos-121-lts \
+    --image-project=cos-cloud
 
-# リポジトリに Artifact Registry のロールを付与
-$ gcloud artifacts repositories add-iam-policy-binding $REPOSITORY_NAME \
-   --location=${REGION} \
-   --member="user:${GCP_EMAIL}" \
-   --role=roles/artifactregistry.writer \
-   --project=${PROJECT_ID}
+# SSH接続用のファイアーウォール設定. 一度設定すれば二回目以降は不要
+$ gcloud compute firewall-rules create allow-ssh \
+  --allow tcp:22
 
-# イメージをビルド
-# Artifact Registry では REPOSITORY という階層が増え、
-# asia-docker.pkg.dev/${REGISTRY_IMAGE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME} とする必要あり
-# Silicon Mac を使っているため、プラットフォーム指定必要
-$ docker build --no-cache . --tag $REPOSITORY_IMAGE_NAME --platform linux/amd64
+# インスタンスにタグ名をつける
+$ gcloud compute instances add-tags $INSTANCE_NAMES --tags=${TAG_NAME}
 
-# イメージをプッシュ
-$ docker push $REPOSITORY_IMAGE_NAME
+# 外部アクセスできるようにファイアーウォールを設定する
+$ gcloud compute firewall-rules create allow-tcp-3000 \
+  --direction=INGRESS \
+  --priority=1000 \
+  --network=default \
+  --action=ALLOW \
+  --rules=tcp:3000 \
+  --source-ranges=0.0.0.0/0 \
+  --target-tags=${TAG_NAME}
 
-# デプロイ
-$ gcloud run deploy gen-ai-game --image $REPOSITORY_IMAGE_NAME --region ${REGION} --allow-unauthenticated
+# インスタンスに SSH接続する
+$ gcloud compute ssh --project=${PROJECT_ID} --zone=${ZONE} $INSTANCE_NAMES
 ```
 
-### ruff によるコード整形
+### インスタンス内で Git Clone -> Docker Comose で環境を立ち上げる
 ```sh
-$ ruff check . --fix
-$ ruff format .
+# git を使えるようにする
+# git 用の設定のための環境変数
+$ export GIT_USER_NAME=HOGE
+$ export GIT_USER_EMAIL=HOGE
+
+# git 用の設定
+$ git config --global user.name $GIT_USER_NAME
+$ git config --global user.email $GIT_USER_EMAIL
+
+# GitHub に公開鍵を設定するため、公開鍵を作成する
+$ ssh-keygen -t rsa -b 4096 -C git config --global user.email $GIT_USER_EMAIL
+
+# 公開鍵の中身を確認
+cat ~/.ssh/id_rsa.pub
+
+- GitHub に公開鍵を登録する
+
+# GitHub のリポジトリをクローンする
+git clone --branch branch_name git_clone_url
+
+# プロジェクトのディレクトリに移動
+cd AIAgentHackathon2nd
+
+# Docker で Docker Compose を実行する
+$ docker run --rm \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v "$(pwd):$(pwd)" \
+  -w "$(pwd)" \
+  docker/compose:1.29.2 up
 ```
+
+### VM の外部IP を元に下記URLに遷移すれば良い
+http://VMの外部IP:3000
 
 ### 参考サイト
-- [GCP 公式ドキュメント Flask アプリをCloudRunにデプロイ](https://cloud.google.com/run/docs/quickstarts/build-and-deploy/deploy-python-service?hl=ja)
-- [GCP 公式ドキュメント 公開（未認証）アクセスを許可する --allow-unauthenticated](https://cloud.google.com/run/docs/authenticating/public?hl=ja)
-- [GCP 公式ドキュメント Vertex AI の生成 AI のロケーション](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations?hl=ja)
-- [GCP 公式ドキュメント DjangoアプリをCloudRunにデプロイ](https://cloud.google.com/python/django/run)
-  - [サンプルコード](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run/django)
-- JavaScript によるゲームの実装
-  - [番号タッチゲームを作るよ](https://javascript-game.com/number-touch-game/)
+- [gcloud コンピューティングインスタンスの作成 by CLI](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create)
+- [公開イメージからインスタンスを作成する](https://cloud.google.com/compute/docs/instances/create-vm-from-public-image?hl=ja)
+- [使用可能なリージョンとゾーン](https://cloud.google.com/compute/docs/regions-zones?hl=ja)
+- [OS名](https://cloud.google.com/compute/docs/images/os-details?hl=ja)
+- [Image Family](https://cloud.google.com/compute/docs/images/image-families-best-practices?hl=ja)
+- [compute instances にタグをつける](https://cloud.google.com/sdk/gcloud/reference/compute/instances/add-tags)
+- [SSH アクセスするためのファイアーウォール設定](https://cloud.google.com/iap/docs/using-tcp-forwarding?hl=ja#preparing_your_project_for_tcp_forwarding)
+- [VMへのSSH接続](https://cloud.google.com/compute/docs/gcloud-compute/common-commands?hl=ja#connecting)
+- [SSH エラーのトラブルシューティング](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors?hl=ja)
+- [Computer Engine から docker-compose する方法](https://cloud.google.com/compute/docs/images/image-families-best-practices?hl=ja)
 
-- [ソースをコンテナにビルドする](https://cloud.google.com/run/docs/building/containers?hl=ja#docker)
-- [Docker + Cloud Run へのコンテナ イメージのデプロイ](https://cloud.google.com/run/docs/deploying?hl=ja#service)
-- [Artifact Registry ロールの付与](https://cloud.google.com/artifact-registry/docs/access-control?hl=ja#grant-project)
-- [事前定義された Artifact Registry ロール](https://cloud.google.com/artifact-registry/docs/access-control?hl=ja#roles)
-- [Artifact RegistryのイメージをGKEにデプロイする際に詰まった話](https://qiita.com/yan_yan/items/1f157f4bae5a6b32cdf0)
-  - Artifact Registry では REPOSITORY という階層が増え、asia-docker.pkg.dev/${REGISTRY_IMAGE_PROJECT}/${REPOSITORY_NAME}/${IMAGE_NAME} とする必要あり
-- [gcloud アーティファクト リポジトリ 作成](https://cloud.google.com/sdk/gcloud/reference/artifacts/repositories/create)
+

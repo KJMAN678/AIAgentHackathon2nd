@@ -178,3 +178,8 @@ cython_debug/
 
 db.sqlite3
 staticfiles/
+
+.mypy_cache/
+
+# JavaScript のパッケージ
+node_modules/
