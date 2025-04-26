@@ -178,3 +178,5 @@ cython_debug/
 
 db.sqlite3
 staticfiles/
+
+.mypy_cache/
