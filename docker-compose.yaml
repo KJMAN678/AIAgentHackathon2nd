@@ -5,9 +5,9 @@ services:
       context: ./frontend
     volumes:
       - ./frontend:/app/frontend
+    command: npm run dev
     ports:
-      - "3000:3000"
-    command: npm run start
+      - "5173:5173"
     depends_on:
       - backend
     networks:

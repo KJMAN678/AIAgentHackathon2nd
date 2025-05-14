@@ -1,17 +1,9 @@
-# ビルドステージ
-FROM node:22.15-alpine3.20 as build
+FROM node:24-alpine
 
-# 作業ディレクトリを設定
+# Set work directory
 WORKDIR /app
 
-# パッケージ依存関係のコピーとインストール
-COPY package*.json ./
-RUN npm ci
-
-# ソースコードをコピー
-COPY . .
-
-# プロダクションビルドを作成
+# Sync the project into a new environment, using the frozen lockfile
+COPY . /app
 RUN npm install
-
-CMD ["npm", "start"]
+COPY . .

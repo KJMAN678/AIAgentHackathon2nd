@@ -17,9 +17,19 @@ $ touch .env
 PROJECT_ID=HOGE
 ```
 
+- package.json を修正
+https://zenn.dev/toshi052312/articles/ffd026e96a8d97#6.-vite-%E3%81%AE%E8%A8%AD%E5%AE%9A%E3%82%92%E4%BF%AE%E6%AD%A3
+```sh
+  "scripts": {
+    // 修正前
+    "dev": "vite",
+    // 修正後
+    "dev": "vite --host",
+```
+
 ```sh
 $ docker compose down
-$ docker compose build --no-cache
+$ docker compose build
 $ docker compose up -d
 
 http://127.0.0.1:8080/api/hello
