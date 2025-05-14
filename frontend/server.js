@@ -4,14 +4,20 @@ const path = require("path");
 const fetch = require('node-fetch');
 const PORT = 3000;
 
+let lastApiResponse = 'No data yet';
+
 // 外部APIからデータを取得する関数
-async function fetchApiData() {
+async function fetchApiData(imageUrl) {
   try {
-    const response = await fetch('http://backend:8080/api/hello');
+    const url = imageUrl 
+      ? `http://backend:8080/api/hello?image=${encodeURIComponent(imageUrl)}`
+      : 'http://backend:8080/api/hello';
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.text();
+    lastApiResponse = data;
     return data;
   } catch (err) {
     console.error('Error fetching API data:', err);
@@ -19,12 +25,29 @@ async function fetchApiData() {
   }
 }
 
+// 5秒ごとにAPIを呼び出す関数
+async function periodicApiCall() {
+  try {
+    const canvas = document.getElementById('field');
+    const imageUrl = canvas.toDataURL("image/jpeg", 0.5);
+    await fetchApiData(imageUrl);
+  } catch (err) {
+    console.error('Error in periodic API call:', err);
+  }
+}
+
+// 5秒ごとに実行
+setInterval(periodicApiCall, 5000);
+
 //webサーバーを作る
 const server = http.createServer(async (req, res) => {
   // API endpoint for /api/hello
-  if (req.url === '/api/hello') {
+  if (req.url.startsWith('/api/hello')) {
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const imageUrl = url.searchParams.get('image');
+    const apiData = await fetchApiData(imageUrl);
     res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello from the API!');
+    res.end(apiData);
     return;
   }
 

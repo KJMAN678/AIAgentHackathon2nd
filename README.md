@@ -1,4 +1,24 @@
 ```sh
+# GC CLI でログイン 
+$ gcloud auth login
+# プロジェクトIDの設定
+$ gcloud config set project $PROJECT_ID
+
+- Vertex AI と Cloud Storage API を有効にする
+$ gcloud services enable aiplatform.googleapis.com
+$ gcloud services enable storage.googleapis.com
+
+$ gcloud auth application-default login
+
+- .env ファイルをフォルダ直下に作成
+$ touch .env
+
+.env ファイルに下記を入力. HOGE はGCPのプロジェクトIDを入力する
+PROJECT_ID=HOGE
+```
+
+```sh
+$ docker compose down
 $ docker compose build --no-cache
 $ docker compose up -d
 

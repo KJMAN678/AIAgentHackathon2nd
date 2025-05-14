@@ -31,9 +31,26 @@
       <div class="api-response">Loading API response...</div>
       <canvas id="field" width="600" height="600"></canvas>
     </div>
-    <img id="ship" src="/images/ship.png" style="display: none;">
-    <img id="enemy" src="/images/enemy.png" style="display: none;">
-    <img id="back" src="/images/back.png" style="display: none;">
-    <script src="/shooting.js"></script>
+    <script src="/breakingBlocks.js"></script>
+    <script>
+      // 5秒ごとにAPIを呼び出す関数
+      async function periodicApiCall() {
+        try {
+          const canvas = document.getElementById('field');
+          const imageUrl = canvas.toDataURL("image/jpeg", 0.5);
+          
+          const response = await fetch(`/api/hello?image=${encodeURIComponent(imageUrl)}`);
+          const result = await response.text();
+          
+          // APIレスポンスを表示
+          document.querySelector('.api-response').textContent = result;
+        } catch (err) {
+          console.error('Error in periodic API call:', err);
+        }
+      }
+
+      // 5秒ごとに実行
+      setInterval(periodicApiCall, 5000);
+    </script>
   </body>
 </html>
