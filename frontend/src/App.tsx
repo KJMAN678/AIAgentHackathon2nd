@@ -48,7 +48,8 @@ export default function App() {
     const x = canvasSize.width / 2;
     const y = canvasSize.height - 30;
 
-    Draw(ctx, x, y);
+    // 安定した処理を行うため、クリーンナップのために 返り値に関数を返す
+    return Draw(ctx, x, y);
   }, []);
 
   return (
