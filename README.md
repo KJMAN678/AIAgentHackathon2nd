@@ -28,12 +28,30 @@ https://zenn.dev/toshi052312/articles/ffd026e96a8d97#6.-vite-%E3%81%AE%E8%A8%AD%
 ```
 
 ```sh
+$ npm install axios --prefix frontend
+
+- CORS 対策
+
+```
+
+```sh
+$ source ./docker_remake.sh
 $ docker compose down
 $ docker compose build
 $ docker compose up -d
 
 http://127.0.0.1:8080/api/hello
-http://127.0.0.1:3000
+http://127.0.0.1:5173/
+```
+
+```sh
+- バックエンド ruff によるコード整形
+$ docker compose run --rm backend ruff check . --fix
+$ docker compose run --rm backend ruff format .
+
+- フロントエンド formatter の実行
+$ npx prettier --write frontend --log-level warn
+$ npx eslint --config frontend/eslint.config.js --fix frontend
 ```
 
 ```sh
@@ -136,5 +154,11 @@ http://VMの外部IP:3000
 - [VMへのSSH接続](https://cloud.google.com/compute/docs/gcloud-compute/common-commands?hl=ja#connecting)
 - [SSH エラーのトラブルシューティング](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors?hl=ja)
 - [Computer Engine から docker-compose する方法](https://cloud.google.com/compute/docs/images/image-families-best-practices?hl=ja)
+- useEffect return に関数を設定するとクリーンナップ処理を行える
+  - 公式ドキュメント
+    - [useEffect](https://react.dev/reference/react/useEffect)
+    - [Synchronizing with Effects](https://react.dev/learn/synchronizing-with-effects#how-to-handle-the-effect-firing-twice-in-development)
+  - [useEffectのコールバック関数とcleanUp関数の実行タイミング、正しく説明できますか？](https://zenn.dev/yskn_sid25/articles/8a19f36bbcc914)
+  - [【useEffect】クリーンアップ処理がなぜ必要なのか体感したい方へ(具体的なコードを交えて説明)](https://qiita.com/kaitoppp/items/36e2fc344cac17b6d5f5)
 
 
