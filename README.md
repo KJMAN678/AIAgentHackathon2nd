@@ -2,6 +2,10 @@
 # GC CLI でログイン 
 $ gcloud auth login
 # プロジェクトIDの設定
+$ export PROJECT_ID=HOGE_PROJECT_ID
+$ export SERVICE_ACCOUNT_MAIL=HOGE_SERVICE_ACCOUNT_MAIL
+
+$ export SERVICE_ACCOUNT_NAME=HOGE_SERVICE_ACCOUNT_NAME
 $ gcloud config set project $PROJECT_ID
 
 - Vertex AI と Cloud Storage API を有効にする
@@ -15,6 +19,11 @@ $ touch .env
 
 .env ファイルに下記を入力. HOGE はGCPのプロジェクトIDを入力する
 PROJECT_ID=HOGE
+SERVICE_ACCOUNT_MAIL=HOGE
+
+- サービスアカウントキーの作成
+$ gcloud iam service-accounts keys create service-account-key.json \
+   --iam-account=${SERVICE_ACCOUNT_MAIL}
 ```
 
 - package.json を修正
@@ -161,4 +170,5 @@ http://VMの外部IP:3000
   - [useEffectのコールバック関数とcleanUp関数の実行タイミング、正しく説明できますか？](https://zenn.dev/yskn_sid25/articles/8a19f36bbcc914)
   - [【useEffect】クリーンアップ処理がなぜ必要なのか体感したい方へ(具体的なコードを交えて説明)](https://qiita.com/kaitoppp/items/36e2fc344cac17b6d5f5)
 
-
+- [GCP サービスアカウントキーの作成](https://cloud.google.com/iam/docs/keys-create-delete?hl=ja)
+  - サービスアカウントの作成画面でサービスアカウントを作成する

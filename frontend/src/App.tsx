@@ -27,6 +27,55 @@ export const player = {
 export default function App() {
   const API_URL = `${import.meta.env.VITE_API_URL}`;
   const [result, setResult] = useState();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const deleteCanvasImage = async () => {
+    try {
+      await fetch(`${API_URL}/api/delete-canvas`, {
+        method: 'DELETE',
+      });
+    } catch (error) {
+      console.error('Error deleting canvas:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Delete canvas image when the game starts
+    deleteCanvasImage();
+  }, []);
+
+  const captureAndSendCanvas = async () => {
+    if (!canvasRef.current) return;
+    
+    try {
+      const canvas = canvasRef.current;
+      const imageBlob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob);
+        }, 'image/jpeg');
+      });
+
+      const formData = new FormData();
+      formData.append('image', imageBlob, 'canvas.jpg');
+
+      // Save the canvas image
+      const saveResponse = await fetch(`${API_URL}/api/save-canvas`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!saveResponse.ok) {
+        throw new Error('Failed to save canvas image');
+      }
+
+      // Fetch new analysis after saving the canvas
+      const analysisResponse = await fetch(`${API_URL}/api/hello`);
+      const data = await analysisResponse.json();
+      setResult(data.result);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +92,6 @@ export default function App() {
   }, []);
 
   console.log(result);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -79,6 +127,12 @@ export default function App() {
         width={480}
         height={480}
       />
+      <button 
+        onClick={captureAndSendCanvas}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 block mx-auto"
+      >
+        Capture Canvas
+      </button>
     </div>
   );
 }

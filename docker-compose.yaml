@@ -7,6 +7,7 @@ services:
         VITE_API_URL: ${VITE_API_URL}
     volumes:
       - ./frontend:/app/frontend
+      - ./frontend/shared-images:/app/frontend/shared-images
     command: npm run dev
     ports:
       - "5173:5173"
@@ -22,10 +23,13 @@ services:
       context: ./backend
     volumes:
       - ./backend:/app/backend
+      - ./service-account-key.json:/service-account-key.json:ro
+      - ./frontend/shared-images:/app/backend/shared-images
     ports:
       - "8080:8080"
     environment:
       - "GCP_PROJECT_ID=${GCP_PROJECT_ID}"
+      - "GOOGLE_APPLICATION_CREDENTIALS=/service-account-key.json"
     networks:
       - app-network
 
