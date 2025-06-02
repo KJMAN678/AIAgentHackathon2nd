@@ -53,3 +53,11 @@ def delete_canvas(request):
     if canvas_path.exists():
         canvas_path.unlink()
     return {"success": True}
+
+
+@api.delete("/delete-canvas1")
+def delete_canvas1(request):
+    canvas_path = SHARED_IMAGES_DIR / "canvas1.jpg"
+    if canvas_path.exists():
+        canvas_path.unlink()
+    return {"success": True}
