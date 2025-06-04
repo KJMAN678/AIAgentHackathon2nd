@@ -18,3 +18,8 @@ jobs:
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          response_language: "ja-JP"
+          pr_description.extra_instructions: "回答は必ず全て日本語で記述してください。" 
+          pr_reviewer.extra_instructions: "回答は必ず全て日本語で記述してください。" 
+          pr_code_suggestions.extra_instructions: "回答は必ず全て日本語で記述してください。" 
+          pr_update_changelog.extra_instructions: "回答は必ず全て日本語で記述してください。" 
