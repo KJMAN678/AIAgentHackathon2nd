@@ -153,6 +153,7 @@ $ docker run --rm \
 http://VMの外部IP:3000
 
 ### 参考サイト
+<!-- Verification test comment added by Devin -->
 - [gcloud コンピューティングインスタンスの作成 by CLI](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create)
 - [公開イメージからインスタンスを作成する](https://cloud.google.com/compute/docs/instances/create-vm-from-public-image?hl=ja)
 - [使用可能なリージョンとゾーン](https://cloud.google.com/compute/docs/regions-zones?hl=ja)
