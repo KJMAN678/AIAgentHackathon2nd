@@ -1,0 +1,4 @@
+.env
+.claude/settings.local.json
+service-account-key.json
+node_modules/
