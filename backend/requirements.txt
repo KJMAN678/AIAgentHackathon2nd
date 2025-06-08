@@ -1,6 +1,6 @@
 gunicorn==23.0.0
 Django==5.2.2
-django-ninja==1.4.1
+django-ninja==1.4.3
 django-cors-headers==4.7.0
-ruff==0.11.6
-google-cloud-aiplatform==1.89.0
+ruff==0.11.13
+google-cloud-aiplatform==1.96.0
