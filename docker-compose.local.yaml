@@ -24,7 +24,7 @@ services:
     volumes:
       - ./backend:/app/backend
       - ./service-account-key.json:/service-account-key.json:ro
-      - ./frontend/shared-images:/app/backend/shared-images
+      - ./backend/shared-images:/app/backend/shared-images
     ports:
       - "8080:8080"
     environment:

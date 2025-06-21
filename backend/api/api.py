@@ -30,11 +30,16 @@ def hello(request):
 
     # Use the saved canvas image if it exists, otherwise use the sample image
     canvas_path = SHARED_IMAGES_DIR / "canvas.jpg"
-    image_path = (
-        canvas_path
-        if canvas_path.exists()
-        else "/app/backend/shared-images/sample.jpeg"
-    )
+    sample_image_path = SHARED_IMAGES_DIR / "sample.jpeg"
+
+    image_path = None
+    if canvas_path.exists():
+        image_path = canvas_path
+    elif sample_image_path.exists():
+        image_path = sample_image_path
+
+    if image_path is None:
+        return {"result": "No image file found."}
 
     response = model.generate_content(
         [
