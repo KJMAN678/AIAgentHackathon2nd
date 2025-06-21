@@ -91,6 +91,14 @@ export default function App() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      captureAndSendCanvas();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   console.log(result);
 
   useEffect(() => {
@@ -127,12 +135,7 @@ export default function App() {
         width={480}
         height={480}
       />
-      <button
-        onClick={captureAndSendCanvas}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 block mx-auto"
-      >
-        Capture Canvas
-      </button>
+
     </div>
   );
 }
