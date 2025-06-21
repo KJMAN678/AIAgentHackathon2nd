@@ -1,4 +1,4 @@
-テスト
+### ローカル開発
 ```sh
 # GC CLI でログイン 
 $ gcloud auth login
@@ -45,10 +45,11 @@ $ npm install axios --prefix frontend
 ```
 
 ```sh
+# ローカル開発環境
 $ source ./docker_remake.sh
-$ docker compose down
-$ docker compose build
-$ docker compose up -d
+$ docker compose -f docker-compose.local.yaml down
+$ docker compose -f docker-compose.local.yaml build
+$ docker compose -f docker-compose.local.yaml up -d
 
 http://127.0.0.1:8080/api/hello
 http://127.0.0.1:5173/
@@ -64,16 +65,20 @@ $ npx prettier --write frontend --log-level warn
 $ npx eslint --config frontend/eslint.config.js --fix frontend
 ```
 
+### デプロイ
 ```sh
+$ touch .envrc
+
 # 環境変数の設定.
 $ export PROJECT_ID=HOGE_PROJECT_ID
 $ export PROJECT_NUMBER=HOGE_PROJECT_NUMBER
-$ export ZONE=asia-northeast1-a
-
+$ export ZONE=asia-northeast1-c
 # GCE用のインスタンス名
 $ export INSTANCE_NAMES=ai-game-vm
 # GCE用のインスタンスのタグ名
 $ export TAG_NAME=webserver
+
+$ direnv allow
 
 # GC CLI でログイン 
 $ gcloud auth login
@@ -93,6 +98,7 @@ $ gcloud compute machine-types list --zones=$ZONE
 # Computer Engine の インスタンス作成
 $ gcloud compute instances create $INSTANCE_NAMES \
     --zone=${ZONE} \
+    --machine-type=e2-medium \
     --image-family=cos-121-lts \
     --image-project=cos-cloud
 
@@ -129,15 +135,18 @@ $ git config --global user.name $GIT_USER_NAME
 $ git config --global user.email $GIT_USER_EMAIL
 
 # GitHub に公開鍵を設定するため、公開鍵を作成する
-$ ssh-keygen -t rsa -b 4096 -C git config --global user.email $GIT_USER_EMAIL
+$ cd .ssh
+$ ssh-keygen -t rsa
 
 # 公開鍵の中身を確認
-cat ~/.ssh/id_rsa.pub
+$ cat ~/.ssh/id_rsa.pub
 
 - GitHub に公開鍵を登録する
 
+$ ssh -T git@github.com
+
 # GitHub のリポジトリをクローンする
-git clone --branch branch_name git_clone_url
+$ git clone --branch branch_name git_clone_url
 
 # プロジェクトのディレクトリに移動
 cd AIAgentHackathon2nd

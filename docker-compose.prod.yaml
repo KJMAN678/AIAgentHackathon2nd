@@ -1,0 +1,36 @@
+services:
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    volumes:
+      - ./frontend:/app/frontend
+      - ./frontend/shared-images:/app/frontend/shared-images
+    command: npm run dev
+    ports:
+      - "5173:5173"
+    environment:
+      - "VITE_API_URL=${VITE_API_URL}"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/app/backend
+      - ./frontend/shared-images:/app/backend/shared-images
+    ports:
+      - "8080:8080"
+    environment:
+      - "GCP_PROJECT_ID=${GCP_PROJECT_ID}"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
