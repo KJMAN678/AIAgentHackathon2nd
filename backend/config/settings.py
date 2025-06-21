@@ -19,7 +19,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "backend",
     ".asia-northeast1.run.app",  # 東京リージョン
-    "34.85.41.47",
+    "${GCPCE_EXTERNAL_IP_ADRESS}",
 ]
 
 

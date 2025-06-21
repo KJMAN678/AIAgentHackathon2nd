@@ -193,7 +193,7 @@ $ docker compose -f docker-compose.prod.yaml up -d
 
 ### VM の外部IP を元に下記URLに遷移すれば良い
 http://VMの外部IP:5173
-http://34.85.41.47:5173
+http://${GCPCE_EXTERNAL_IP_ADRESS}:5173
 
 ### 参考サイト
 - [gcloud コンピューティングインスタンスの作成 by CLI](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create)
