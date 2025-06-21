@@ -29,6 +29,7 @@ services:
       - "8080:8080"
     environment:
       - "GCP_PROJECT_ID=${GCP_PROJECT_ID}"
+      - "GCPCE_EXTERNAL_IP_ADRESS=${GCPCE_EXTERNAL_IP_ADRESS}"
     networks:
       - app-network
 
