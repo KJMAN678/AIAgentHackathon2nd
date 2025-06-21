@@ -3,7 +3,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-GCPCE_EXTERNAL_IP_ADRESS = os.getenv("GCPCE_EXTERNAL_IP_ADRESS")
+GCPCE_EXTERNAL_IP_ADRESS = os.getenv("GCPCE_EXTERNAL_IP_ADRESS", "")
 
 
 # Quick-start development settings - unsuitable for production
