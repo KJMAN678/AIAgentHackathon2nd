@@ -1,7 +1,9 @@
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+GCPCE_EXTERNAL_IP_ADRESS = os.getenv("GCPCE_EXTERNAL_IP_ADRESS")
 
 
 # Quick-start development settings - unsuitable for production
@@ -12,6 +14,7 @@ SECRET_KEY = "django-insecure-((3hw1$=ub*k=(54ky9n1192@&h3fz@7or(kp!8_64exrkema3
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+print(GCPCE_EXTERNAL_IP_ADRESS, flush=True)
 
 ALLOWED_HOSTS = [
     "0.0.0.0",
@@ -19,7 +22,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "backend",
     ".asia-northeast1.run.app",  # 東京リージョン
-    "${GCPCE_EXTERNAL_IP_ADRESS}",
+    f"{GCPCE_EXTERNAL_IP_ADRESS}",
 ]
 
 
