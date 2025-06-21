@@ -21,7 +21,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "backend",
     ".asia-northeast1.run.app",  # 東京リージョン
-    "34.146.183.84:8080",
+    GCPCE_EXTERNAL_IP_ADRESS,
 ]
 
 
@@ -128,7 +128,7 @@ CORS_ORIGIN_WHITELIST = (
     "http://frontend:3000",
     "http://127.0.0.1:5173",
     "http://frontend:5173",
-    "http://34.85.41.47:5173",
-    "http://34.85.41.47:8080",
+    f"http://{GCPCE_EXTERNAL_IP_ADRESS}:5173",
+    f"http://{GCPCE_EXTERNAL_IP_ADRESS}:8080",
 )
 CORS_ALLOW_CREDENTIALS = True
