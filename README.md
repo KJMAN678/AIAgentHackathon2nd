@@ -119,6 +119,15 @@ $ gcloud compute firewall-rules create allow-tcp-5173 \
   --source-ranges=0.0.0.0/0 \
   --target-tags=${TAG_NAME}
 
+$ gcloud compute firewall-rules create allow-tcp-8080 \
+  --direction=INGRESS \
+  --priority=1000 \
+  --network=default \
+  --action=ALLOW \
+  --rules=tcp:8080 \
+  --source-ranges=0.0.0.0/0 \
+  --target-tags=${TAG_NAME}
+
 # インスタンスに SSH接続する
 $ gcloud compute ssh --project=${PROJECT_ID} --zone=${ZONE} $INSTANCE_NAMES
 ```
