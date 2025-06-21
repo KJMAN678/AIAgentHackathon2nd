@@ -127,15 +127,22 @@ export default function App() {
   }, []);
 
   return (
-    <div>
-      <h1 className="text-center">{result}</h1>
-      <canvas
-        ref={canvasRef}
-        className="bg-[#d3d3d3] block mx-auto"
-        width={480}
-        height={480}
-      />
-
+    <div className="min-h-screen bg-gray-50 py-4">
+      <div className="max-w-2xl mx-auto px-4">
+        <div className="mb-6 min-h-[80px] flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-sm border p-4 w-full">
+            <p className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap break-words text-center">
+              {result || "AIコメンタリーを待っています..."}
+            </p>
+          </div>
+        </div>
+        <canvas
+          ref={canvasRef}
+          className="bg-[#d3d3d3] block mx-auto rounded-lg shadow-lg"
+          width={480}
+          height={480}
+        />
+      </div>
     </div>
   );
 }
