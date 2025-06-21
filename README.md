@@ -101,6 +101,8 @@ $ gcloud compute instances create $INSTANCE_NAMES \
     --machine-type=e2-medium \
     --image-family=cos-121-lts \
     --image-project=cos-cloud
+    --service-account="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --scopes="https://www.googleapis.com/auth/cloud-platform"
 
 # SSH接続用のファイアーウォール設定. 一度設定すれば二回目以降は不要
 $ gcloud compute firewall-rules create allow-ssh \
