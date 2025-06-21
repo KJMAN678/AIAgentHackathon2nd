@@ -14,7 +14,6 @@ SECRET_KEY = "django-insecure-((3hw1$=ub*k=(54ky9n1192@&h3fz@7or(kp!8_64exrkema3
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-print(GCPCE_EXTERNAL_IP_ADRESS, flush=True)
 
 ALLOWED_HOSTS = [
     "0.0.0.0",
@@ -22,7 +21,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "backend",
     ".asia-northeast1.run.app",  # 東京リージョン
-    f"{GCPCE_EXTERNAL_IP_ADRESS}",
+    "34.146.183.84:8080",
 ]
 
 
