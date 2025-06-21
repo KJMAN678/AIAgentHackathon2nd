@@ -1,7 +1,9 @@
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+GCPCE_EXTERNAL_IP_ADRESS = os.getenv("GCPCE_EXTERNAL_IP_ADRESS", "")
 
 
 # Quick-start development settings - unsuitable for production
@@ -19,6 +21,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "backend",
     ".asia-northeast1.run.app",  # 東京リージョン
+    GCPCE_EXTERNAL_IP_ADRESS,
 ]
 
 
@@ -125,5 +128,7 @@ CORS_ORIGIN_WHITELIST = (
     "http://frontend:3000",
     "http://127.0.0.1:5173",
     "http://frontend:5173",
+    f"http://{GCPCE_EXTERNAL_IP_ADRESS}:5173",
+    f"http://{GCPCE_EXTERNAL_IP_ADRESS}:8080",
 )
 CORS_ALLOW_CREDENTIALS = True

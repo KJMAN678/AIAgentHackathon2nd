@@ -1,3 +1,4 @@
+### ローカル開発
 ```sh
 # GC CLI でログイン 
 $ gcloud auth login
@@ -44,10 +45,11 @@ $ npm install axios --prefix frontend
 ```
 
 ```sh
+# ローカル開発環境
 $ source ./docker_remake.sh
-$ docker compose down
-$ docker compose build
-$ docker compose up -d
+$ docker compose -f docker-compose.local.yaml down
+$ docker compose -f docker-compose.local.yaml build
+$ docker compose -f docker-compose.local.yaml up -d
 
 http://127.0.0.1:8080/api/hello
 http://127.0.0.1:5173/
@@ -63,16 +65,20 @@ $ npx prettier --write frontend --log-level warn
 $ npx eslint --config frontend/eslint.config.js --fix frontend
 ```
 
+### デプロイ
 ```sh
+$ touch .envrc
+
 # 環境変数の設定.
 $ export PROJECT_ID=HOGE_PROJECT_ID
 $ export PROJECT_NUMBER=HOGE_PROJECT_NUMBER
-$ export ZONE=asia-northeast1-a
-
+$ export ZONE=asia-northeast1-c
 # GCE用のインスタンス名
 $ export INSTANCE_NAMES=ai-game-vm
 # GCE用のインスタンスのタグ名
 $ export TAG_NAME=webserver
+
+$ direnv allow
 
 # GC CLI でログイン 
 $ gcloud auth login
@@ -92,8 +98,10 @@ $ gcloud compute machine-types list --zones=$ZONE
 # Computer Engine の インスタンス作成
 $ gcloud compute instances create $INSTANCE_NAMES \
     --zone=${ZONE} \
+    --machine-type=e2-medium \
     --image-family=cos-121-lts \
-    --image-project=cos-cloud
+    --image-project=cos-cloud \
+    --scopes="https://www.googleapis.com/auth/cloud-platform"
 
 # SSH接続用のファイアーウォール設定. 一度設定すれば二回目以降は不要
 $ gcloud compute firewall-rules create allow-ssh \
@@ -103,12 +111,21 @@ $ gcloud compute firewall-rules create allow-ssh \
 $ gcloud compute instances add-tags $INSTANCE_NAMES --tags=${TAG_NAME}
 
 # 外部アクセスできるようにファイアーウォールを設定する
-$ gcloud compute firewall-rules create allow-tcp-3000 \
+$ gcloud compute firewall-rules create allow-tcp-5173 \
   --direction=INGRESS \
   --priority=1000 \
   --network=default \
   --action=ALLOW \
-  --rules=tcp:3000 \
+  --rules=tcp:5173 \
+  --source-ranges=0.0.0.0/0 \
+  --target-tags=${TAG_NAME}
+
+$ gcloud compute firewall-rules create allow-tcp-8080 \
+  --direction=INGRESS \
+  --priority=1000 \
+  --network=default \
+  --action=ALLOW \
+  --rules=tcp:8080 \
   --source-ranges=0.0.0.0/0 \
   --target-tags=${TAG_NAME}
 
@@ -128,29 +145,55 @@ $ git config --global user.name $GIT_USER_NAME
 $ git config --global user.email $GIT_USER_EMAIL
 
 # GitHub に公開鍵を設定するため、公開鍵を作成する
-$ ssh-keygen -t rsa -b 4096 -C git config --global user.email $GIT_USER_EMAIL
+$ cd .ssh
+$ ssh-keygen -t rsa
 
 # 公開鍵の中身を確認
-cat ~/.ssh/id_rsa.pub
+$ cat ~/.ssh/id_rsa.pub
 
 - GitHub に公開鍵を登録する
 
+$ ssh -T git@github.com
+
 # GitHub のリポジトリをクローンする
-git clone --branch branch_name git_clone_url
+$ git clone --branch branch_name git_clone_url
+
+
+$ export GCP_PROJECT_ID=hoge
+# Computer Engine のコンソールから 外部IPアドレスを参照
+$ export GCPCE_EXTERNAL_IP_ADRESS=hoge
+$ export VITE_API_URL=http://${GCPCE_EXTERNAL_IP_ADRESS}:8080
+
+# docker compose v2 のインストール
+# Google提供実行可能なディレクトリを使う
+$ sudo mkdir -p /var/lib/google/docker-compose-bin
+$ sudo curl -sSL \
+  https://github.com/docker/compose/releases/download/v2.37.2/docker-compose-linux-x86_64 \
+  -o /var/lib/google/docker-compose
+$ sudo chmod o+x /var/lib/google/docker-compose
+
+# CLI プラグイン配置用ディレクトリ作成
+$ mkdir -p ~/.docker/cli-plugins
+
+# シンボリックリンク
+$ ln -sf /var/lib/google/docker-compose ~/.docker/cli-plugins/docker-compose
+
+# 確認
+$ docker compose version
 
 # プロジェクトのディレクトリに移動
-cd AIAgentHackathon2nd
-
-# Docker で Docker Compose を実行する
-$ docker run --rm \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v "$(pwd):$(pwd)" \
-  -w "$(pwd)" \
-  docker/compose:1.29.2 up
+$ cd AIAgentHackathon2nd
+$ docker compose -f docker-compose.prod.yaml down
+$ docker compose -f docker-compose.prod.yaml build
+$ docker compose -f docker-compose.prod.yaml up -d
 ```
 
+
+
+
 ### VM の外部IP を元に下記URLに遷移すれば良い
-http://VMの外部IP:3000
+http://VMの外部IP:5173
+http://${GCPCE_EXTERNAL_IP_ADRESS}:5173
 
 ### 参考サイト
 - [gcloud コンピューティングインスタンスの作成 by CLI](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create)
