@@ -12,7 +12,7 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - "VITE_API_URL=${VITE_API_URL}"
+      VITE_API_URL: "http://34.85.41.47:8080"
     depends_on:
       - backend
     networks:

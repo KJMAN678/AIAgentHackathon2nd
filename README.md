@@ -110,12 +110,12 @@ $ gcloud compute firewall-rules create allow-ssh \
 $ gcloud compute instances add-tags $INSTANCE_NAMES --tags=${TAG_NAME}
 
 # 外部アクセスできるようにファイアーウォールを設定する
-$ gcloud compute firewall-rules create allow-tcp-3000 \
+$ gcloud compute firewall-rules create allow-tcp-5173 \
   --direction=INGRESS \
   --priority=1000 \
   --network=default \
   --action=ALLOW \
-  --rules=tcp:3000 \
+  --rules=tcp:5173 \
   --source-ranges=0.0.0.0/0 \
   --target-tags=${TAG_NAME}
 
@@ -148,19 +148,39 @@ $ ssh -T git@github.com
 # GitHub のリポジトリをクローンする
 $ git clone --branch branch_name git_clone_url
 
-# プロジェクトのディレクトリに移動
-cd AIAgentHackathon2nd
 
-# Docker で Docker Compose を実行する
-$ docker run --rm \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v "$(pwd):$(pwd)" \
-  -w "$(pwd)" \
-  docker/compose:1.29.2 up
+$ export GCP_PROJECT_ID=hoge
+$ export VITE_API_URL=http://34.85.41.47:8080
+
+# docker compose v2 のインストール
+# Google提供実行可能なディレクトリを使う
+$ sudo curl -sSL \
+  https://github.com/docker/compose/releases/download/v2.37.2/docker-compose-linux-x86_64 \
+  -o /var/lib/google/docker-compose
+$ sudo chmod o+x /var/lib/google/docker-compose
+
+# CLI プラグイン配置用ディレクトリ作成
+$ mkdir -p ~/.docker/cli-plugins
+
+# シンボリックリンク
+$ ln -sf /var/lib/google/docker-compose ~/.docker/cli-plugins/docker-compose
+
+# 確認
+$ docker compose version
+
+# プロジェクトのディレクトリに移動
+$ cd AIAgentHackathon2nd
+$ docker compose -f docker-compose.prod.yaml down
+$ docker compose -f docker-compose.prod.yaml build
+$ docker compose -f docker-compose.prod.yaml up -d
 ```
 
+
+
+
 ### VM の外部IP を元に下記URLに遷移すれば良い
-http://VMの外部IP:3000
+http://VMの外部IP:5173
+http://34.85.41.47:5173
 
 ### 参考サイト
 - [gcloud コンピューティングインスタンスの作成 by CLI](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create)
