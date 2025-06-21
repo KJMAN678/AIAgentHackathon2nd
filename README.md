@@ -100,8 +100,7 @@ $ gcloud compute instances create $INSTANCE_NAMES \
     --zone=${ZONE} \
     --machine-type=e2-medium \
     --image-family=cos-121-lts \
-    --image-project=cos-cloud
-    --service-account="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --image-project=cos-cloud \
     --scopes="https://www.googleapis.com/auth/cloud-platform"
 
 # SSH接続用のファイアーウォール設定. 一度設定すれば二回目以降は不要
@@ -161,10 +160,13 @@ $ git clone --branch branch_name git_clone_url
 
 
 $ export GCP_PROJECT_ID=hoge
-$ export VITE_API_URL=http://34.85.41.47:8080
+# Computer Engine のコンソールから 外部IPアドレスを参照
+$ export GCPCE_EXTERNAL_IP_ADRESS=hoge
+$ export VITE_API_URL=http://${GCPCE_EXTERNAL_IP_ADRESS}:8080
 
 # docker compose v2 のインストール
 # Google提供実行可能なディレクトリを使う
+$ sudo mkdir -p /var/lib/google/docker-compose-bin
 $ sudo curl -sSL \
   https://github.com/docker/compose/releases/download/v2.37.2/docker-compose-linux-x86_64 \
   -o /var/lib/google/docker-compose

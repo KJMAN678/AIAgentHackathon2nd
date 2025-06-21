@@ -4,7 +4,7 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_URL: "http://34.85.41.47:8080"
+        VITE_API_URL: ${VITE_API_URL}
     volumes:
       - ./frontend:/app/frontend
       - ./frontend/shared-images:/app/frontend/shared-images
@@ -12,7 +12,7 @@ services:
     ports:
       - "5173:5173"
     environment:
-      VITE_API_URL: "http://34.85.41.47:8080"
+      - "VITE_API_URL=${VITE_API_URL}"
     depends_on:
       - backend
     networks:
