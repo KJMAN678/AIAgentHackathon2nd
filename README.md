@@ -153,6 +153,7 @@ $ cat ~/.ssh/id_rsa.pub
 
 - GitHub に公開鍵を登録する
 
+# GitHubにSSH接続できるか確かめる
 $ ssh -T git@github.com
 
 # GitHub のリポジトリをクローンする
@@ -188,12 +189,8 @@ $ docker compose -f docker-compose.prod.yaml build
 $ docker compose -f docker-compose.prod.yaml up -d
 ```
 
-
-
-
 ### VM の外部IP を元に下記URLに遷移すれば良い
 http://VMの外部IP:5173
-http://${GCPCE_EXTERNAL_IP_ADRESS}:5173
 
 ### 参考サイト
 - [gcloud コンピューティングインスタンスの作成 by CLI](https://cloud.google.com/sdk/gcloud/reference/compute/instances/create)
