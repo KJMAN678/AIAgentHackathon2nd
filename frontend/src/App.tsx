@@ -133,7 +133,7 @@ export default function App() {
           <div className="bg-white rounded-lg shadow-sm border p-4 w-full h-20 flex items-center justify-center overflow-hidden">
             <p className="text-gray-800 text-sm leading-relaxed text-center">
               {(() => {
-                const text = result || "これは非常に長いテストメッセージです。固定サイズのコンテナでテキストが適切に切り詰められることを確認しています。この文章は100文字を超えているため、省略記号が表示されるはずです。";
+                const text = result || "AIコメンタリーを待っています...";
                 const maxLength = 100;
                 return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
               })()}
