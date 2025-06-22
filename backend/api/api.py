@@ -8,8 +8,13 @@ from pathlib import Path
 api = NinjaAPI()
 
 # Ensure the shared-images directory exists
-SHARED_IMAGES_DIR = Path("/app/backend/shared-images")
-SHARED_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+import os
+SHARED_IMAGES_DIR = Path(os.getenv("SHARED_IMAGES_DIR", "/app/backend/shared-images"))
+try:
+    SHARED_IMAGES_DIR.mkdir(parents=True, exist_ok=True)
+except (PermissionError, FileNotFoundError):
+    import tempfile
+    SHARED_IMAGES_DIR = Path(tempfile.mkdtemp())
 
 
 @api.post("/save-canvas")

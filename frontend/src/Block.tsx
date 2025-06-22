@@ -1,3 +1,9 @@
+interface BlockItem {
+  x: number;
+  y: number;
+  status: number;
+}
+
 export const block = {
   rowCount: 3,
   columnCount: 5,
@@ -6,7 +12,7 @@ export const block = {
   padding: 10,
   offsetTop: 30,
   offsetLeft: 30,
-  blocks: [],
+  blocks: [] as BlockItem[][],
 };
 
 export const makeBlocks = () => {

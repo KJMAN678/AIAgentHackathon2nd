@@ -4,3 +4,6 @@ django-ninja==1.4.3
 django-cors-headers==4.7.0
 ruff==0.11.13
 google-cloud-aiplatform==1.96.0
+pytest==8.0.0
+pytest-django==4.8.0
+pytest-mock==3.12.0

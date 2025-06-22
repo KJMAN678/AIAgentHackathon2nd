@@ -1,6 +1,7 @@
-import "./style.css";
+// import "./style.css"; // Temporarily commented out for testing
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Draw } from "./Draw";
+import { getApiUrl } from "./utils/env";
 
 // NOTE: 変数は別のファイルに纏める
 export const canvasSize = {
@@ -25,7 +26,7 @@ export const player = {
 };
 
 export default function App() {
-  const API_URL = `${import.meta.env.VITE_API_URL}`;
+  const API_URL = getApiUrl();
   const [result, setResult] = useState();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isCapturingRef = useRef(false);
