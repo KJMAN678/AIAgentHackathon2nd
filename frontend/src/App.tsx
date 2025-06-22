@@ -134,7 +134,7 @@ export default function App() {
             <p className="text-gray-800 text-sm leading-relaxed text-center">
               {(() => {
                 const text = result || "AIコメンタリーを待っています...";
-                const maxLength = 150;
+                const maxLength = 100;
                 return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
               })()}
             </p>
