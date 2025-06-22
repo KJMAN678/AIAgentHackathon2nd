@@ -1,5 +1,5 @@
 import "./style.css";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { Draw } from "./Draw";
 
 // NOTE: 変数は別のファイルに纏める
@@ -28,6 +28,7 @@ export default function App() {
   const API_URL = `${import.meta.env.VITE_API_URL}`;
   const [result, setResult] = useState();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isCapturingRef = useRef(false);
 
   const deleteCanvasImage = async () => {
     try {
@@ -44,8 +45,10 @@ export default function App() {
     deleteCanvasImage();
   }, []);
 
-  const captureAndSendCanvas = async () => {
-    if (!canvasRef.current) return;
+  const captureAndSendCanvas = useCallback(async () => {
+    if (!canvasRef.current || isCapturingRef.current) return;
+
+    isCapturingRef.current = true;
 
     try {
       const canvas = canvasRef.current;
@@ -74,8 +77,10 @@ export default function App() {
       setResult(data.result);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      isCapturingRef.current = false;
     }
-  };
+  }, [API_URL]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,7 +94,7 @@ export default function App() {
       }
     };
     fetchData();
-  }, []);
+  }, [API_URL]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -97,7 +102,7 @@ export default function App() {
     }, 5000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [captureAndSendCanvas]);
 
   console.log(result);
 
