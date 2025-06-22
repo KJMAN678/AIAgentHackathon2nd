@@ -93,7 +93,7 @@ export default function App() {
       }
     };
     fetchData();
-  }, []);
+  }, [API_URL]);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
