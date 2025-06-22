@@ -129,10 +129,14 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50 py-4">
       <div className="max-w-2xl mx-auto px-4">
-        <div className="mb-6 min-h-[80px] flex items-center justify-center">
-          <div className="bg-white rounded-lg shadow-sm border p-4 w-full">
-            <p className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap break-words text-center max-w-none">
-              {result || "AIコメンタリーを待っています..."}
+        <div className="mb-6 flex items-center justify-center">
+          <div className="bg-white rounded-lg shadow-sm border p-4 w-full h-20 flex items-center justify-center overflow-hidden">
+            <p className="text-gray-800 text-sm leading-relaxed text-center">
+              {(() => {
+                const text = result || "AIコメンタリーを待っています...";
+                const maxLength = 150;
+                return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+              })()}
             </p>
           </div>
         </div>
