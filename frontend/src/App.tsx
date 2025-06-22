@@ -49,7 +49,6 @@ export default function App() {
     if (!canvasRef.current || isCapturingRef.current) return;
 
     isCapturingRef.current = true;
-
     try {
       const canvas = canvasRef.current;
       const imageBlob = await new Promise<Blob>((resolve) => {
