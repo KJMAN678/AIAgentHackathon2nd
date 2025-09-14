@@ -105,6 +105,9 @@ $ gcloud run deploy gen-ai-game --image $REPOSITORY_IMAGE_NAME --region ${REGION
 ```sh
 $ docker compose run --rm backend ruff check . --fix
 $ docker compose run --rm backend ruff format .
+
+### uv.lock の更新
+$ docker compose run --rm backend uv sync
 ```
 
 ### 参考サイト

@@ -65,9 +65,25 @@ $ npx prettier --write frontend --log-level warn
 $ npx eslint --config frontend/eslint.config.js --fix frontend
 ```
 
+
+### package-json, package-json-lock のアプデ
+```sh
+$ cd frontend
+$ npx npm-check-updates -u
+$ npx npm-check-updates -u --target minor
+$ npx npm-check-updates -u --target patch
+$ npm install
+cd ..
+```
+
 ### デプロイ
 ```sh
 $ touch .envrc
+or
+$ cp .envrc.example .envrc
+$ brew install direnv
+- 適宜更新
+$ direnv allow
 
 # 環境変数の設定.
 $ export PROJECT_ID=HOGE_PROJECT_ID
