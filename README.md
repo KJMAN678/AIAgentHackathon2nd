@@ -16,7 +16,9 @@ $ gcloud services enable storage.googleapis.com
 $ gcloud auth application-default login
 
 - .env ファイルをフォルダ直下に作成
-$ touch .env
+$ touch .envrc
+$ cp .envrc.example .envrc
+$ direnv allow
 
 .env ファイルに下記を入力. HOGE はGCPのプロジェクトIDを入力する
 PROJECT_ID=HOGE
