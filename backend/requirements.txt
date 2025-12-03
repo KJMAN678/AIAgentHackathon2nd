@@ -1,5 +1,5 @@
 gunicorn==23.0.0
-Django==5.2.8
+Django==5.2.9
 django-ninja==1.4.3
 django-cors-headers==4.9.0
 ruff==0.13.0
