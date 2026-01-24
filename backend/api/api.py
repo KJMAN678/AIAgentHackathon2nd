@@ -1,8 +1,11 @@
-import vertexai
+# import vertexai
+import os
+from google.genai import Client
+from google.genai.types import Part
+
 from ninja import NinjaAPI, File
 from ninja.files import UploadedFile
-from vertexai.generative_models import GenerativeModel, Image
-import os
+
 from pathlib import Path
 
 api = NinjaAPI()
@@ -24,9 +27,6 @@ def save_canvas(request, image: UploadedFile = File(...)):
 @api.get("/hello")
 def hello(request):
     PROJECT_ID = os.environ.get("GCP_PROJECT_ID")
-    vertexai.init(project=PROJECT_ID, location="asia-northeast1")
-
-    model = GenerativeModel("gemini-1.5-flash-002")
 
     # Use the saved canvas image if it exists, otherwise use the sample image
     canvas_path = SHARED_IMAGES_DIR / "canvas.jpg"
@@ -41,11 +41,19 @@ def hello(request):
     if image_path is None:
         return {"result": "No image file found."}
 
-    response = model.generate_content(
-        [
+    client = Client(
+        vertexai=True,
+        project=PROJECT_ID,
+        location="asia-northeast1",
+    )
+
+    image_part = Part.from_uri(file_uri=str(image_path))
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=[
+            image_part,
             "ブロック崩しのゲームをしています。この画像からブロック崩しのゲームの状況を判断し、応援してください",
-            Image.load_from_file(str(image_path)),
-        ]
+        ],
     )
 
     # FIXME: エラー処理必要

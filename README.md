@@ -59,8 +59,8 @@ http://127.0.0.1:5173/
 
 ```sh
 - バックエンド ruff によるコード整形
-$ docker compose run --rm backend ruff check . --fix
-$ docker compose run --rm backend ruff format .
+$ docker compose -f docker-compose.local.yaml run --rm backend ruff check . --fix
+$ docker compose -f docker-compose.local.yaml run --rm backend ruff format .
 
 - フロントエンド formatter の実行
 $ npx prettier --write frontend --log-level warn
@@ -230,3 +230,6 @@ http://VMの外部IP:5173
 
 - [GCP サービスアカウントキーの作成](https://cloud.google.com/iam/docs/keys-create-delete?hl=ja)
   - サービスアカウントの作成画面でサービスアカウントを作成する
+
+- [Vertex AI SDK 移行ガイド](https://docs.cloud.google.com/vertex-ai/generative-ai/docs/deprecations/genai-vertexai-sdk.md?hl=ja#migration)
+  - Vertex AI SDK から Google GenAI SDK へ以降
