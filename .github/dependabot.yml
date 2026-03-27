@@ -1,0 +1,39 @@
+version: 2
+updates:
+  - package-ecosystem: "uv"
+    directory: "/backend"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 28
+    target-branch: "develop"
+    versioning-strategy: auto
+
+  - package-ecosystem: "docker"
+    directory: "/backend"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 28
+    target-branch: "develop"
+    ignore:
+      - dependency-name: "python"
+        update-types:
+          - "version-update:semver-major"
+
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 28
+    target-branch: "develop"
+    versioning-strategy: auto
+
+  - package-ecosystem: "docker-compose"
+    directory: "/"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 28
+    target-branch: "develop"
